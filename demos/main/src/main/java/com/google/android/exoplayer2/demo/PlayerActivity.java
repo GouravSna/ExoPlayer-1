@@ -20,6 +20,7 @@ import static com.google.android.exoplayer2.util.Assertions.checkNotNull;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Pair;
 import android.view.KeyEvent;
 import android.view.View;
@@ -57,6 +58,7 @@ import com.google.android.exoplayer2.ui.StyledPlayerView;
 import com.google.android.exoplayer2.upstream.DataSource;
 import com.google.android.exoplayer2.util.ErrorMessageProvider;
 import com.google.android.exoplayer2.util.EventLogger;
+import com.google.android.exoplayer2.util.Log;
 import com.google.android.exoplayer2.util.Util;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -124,6 +126,22 @@ public class PlayerActivity extends AppCompatActivity
       trackSelectorParameters = builder.build();
       clearStartPosition();
     }
+
+    Handler handler = new Handler();
+    handler.postDelayed(new Runnable() {
+      @Override
+      public void run() {
+        if (player != null && player.isPlaying()) {
+          runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+              Log.d("LowLatencyCheck", "player.getCurrentLiveOffset() value:  " + player.getCurrentLiveOffset());
+            }
+          });
+        }
+        handler.postDelayed(this, 1000);
+      }
+    }, 1000);
   }
 
   @Override

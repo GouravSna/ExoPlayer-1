@@ -24,6 +24,7 @@ import androidx.annotation.Nullable;
 import com.google.android.exoplayer2.C;
 import com.google.android.exoplayer2.MediaItem;
 import com.google.android.exoplayer2.util.Assertions;
+import com.google.android.exoplayer2.util.Log;
 import com.google.android.exoplayer2.util.Util;
 import com.google.common.collect.ImmutableList;
 import java.util.ArrayList;
@@ -64,6 +65,8 @@ public class IntentUtil {
   public static final String SUBTITLE_URI_EXTRA = "subtitle_uri";
   public static final String SUBTITLE_MIME_TYPE_EXTRA = "subtitle_mime_type";
   public static final String SUBTITLE_LANGUAGE_EXTRA = "subtitle_language";
+
+  public static int listIndexer = 2;
 
   /** Creates a list of {@link MediaItem media items} from an {@link Intent}. */
   public static List<MediaItem> createMediaItemsFromIntent(Intent intent) {
@@ -109,6 +112,8 @@ public class IntentUtil {
   private static MediaItem createMediaItemFromIntent(
       Uri uri, Intent intent, String extrasKeySuffix) {
     @Nullable String mimeType = intent.getStringExtra(MIME_TYPE_EXTRA + extrasKeySuffix);
+    Log.d("LowLatencyCheck" , "Creating new MediaItem ");
+    Log.d("LowLatencyCheck" , "uri :    " + uri.toString());
     MediaItem.Builder builder =
         new MediaItem.Builder()
             .setUri(uri)
@@ -120,6 +125,17 @@ public class IntentUtil {
             .setClipEndPositionMs(
                 intent.getLongExtra(
                     CLIP_END_POSITION_MS_EXTRA + extrasKeySuffix, C.TIME_END_OF_SOURCE));
+
+    if (listIndexer % 2 == 0) {
+      Log.d("LowLatencyCheck" , "Inside Live Config");
+      builder.setLiveTargetOffsetMs(5000)
+          .setLiveMinOffsetMs(C.TIME_UNSET)
+          .setLiveMaxOffsetMs(3000)
+          .setLiveMinPlaybackSpeed(C.RATE_UNSET)
+          .setLiveMaxPlaybackSpeed(10.0f);
+    }
+
+    listIndexer++;
 
     return populateDrmPropertiesFromIntent(builder, intent, extrasKeySuffix).build();
   }

@@ -378,6 +378,17 @@
     "name": "Playlists",
     "samples": [
       {
+        "name": "Live -> VOD",
+        "playlist": [
+          {
+            "uri": "https://livesim.dashif.org/livesim/chunkdur_1/ato_7/testpic4_8s/Manifest300.mpd"
+          },
+          {
+            "uri": "https://dash.akamaized.net/akamai/bbb_30fps/bbb_30fps.mpd"
+          }
+        ]
+      },
+      {
         "name": "Cats -> Dogs",
         "playlist": [
           {
